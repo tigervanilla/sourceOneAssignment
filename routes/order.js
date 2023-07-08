@@ -11,4 +11,9 @@ router.post('/', async (req, res) => {
     return res.json({ rent });
 });
 
+router.post('/addbook', async (req, res) => {
+    const books = req.body;
+    const result = await bookModel.create(books);
+    return res.json(result)
+})
 module.exports = router;

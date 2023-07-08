@@ -1,0 +1,65 @@
+{
+	"info": {
+		"_postman_id": "c4a0643e-8cbe-4a2d-9510-e0b42e1dab04",
+		"name": "Bookstore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Calc order rent",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"lineItems\":[\r\n        {\"_id\":\"64a5ad4212a9f6ccecbd46ca\", \"duration\":2},\r\n        {\"_id\":\"64a5ad4212a9f6ccecbd46cb\", \"duration\":3},\r\n        {\"_id\":\"64a5ad4212a9f6ccecbd46cc\", \"duration\":4}\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3002/order",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add books in DB",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    { \"name\": \"The Alchemist\", \"type\": \"fiction\" },\r\n    { \"name\": \"Sapiens\", \"type\": \"novel\" },\r\n    { \"name\": \"head first python\", \"type\": \"regular\" }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3002/order/addbook",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"order",
+						"addbook"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
