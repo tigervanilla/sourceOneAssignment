@@ -1,0 +1,19 @@
+{
+  "name": "sourceone-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha test/rentCalculator.spec.js"
+  },
+  "author": "Piyush Maheshwari",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.3.1"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0"
+  }
+}
