@@ -1,31 +1,59 @@
 const { expect } = require('chai');
-
+const sinon = require('sinon');
 const { calculateRent } = require('../core/rentCalculator');
-
+const { RENTAL, BOOK_TYPE } = require('../constants/index')
+const bookModel = require('../models/book.model');
 
 describe('calculateRent', () => {
-  it('should calculate rental charges for line items', () => {
-    const lineItems = [
-      { name: 'let us c', duration: 5 },
-      { name: 'head first javascript', duration: 3 },
-      { name: 'head first python', duration: 7 },
+  let bookModelStub = sinon.stub(bookModel);
+  let lineItems;
+  let books;
+
+  beforeEach(() => {
+    books = [
+      { _id: '64a5ad4212a9f6ccecbd46ca', type: BOOK_TYPE.FICTION },
+      { _id: '64a5ad4212a9f6ccecbd46cb', type: BOOK_TYPE.NOVEL },
+      { _id: '64a5ad4212a9f6ccecbd46cc', type: BOOK_TYPE.REGULAR }
     ];
-    const result = calculateRent(lineItems);
-    expect(result).to.equal(15);
+
+    lineItems = [
+      { _id: '64a5ad4212a9f6ccecbd46ca', duration: 2 },
+      { _id: '64a5ad4212a9f6ccecbd46cb', duration: 3 },
+      { _id: '64a5ad4212a9f6ccecbd46cc', duration: 4 }
+    ];
+
   });
 
-  it('should return 0 for an empty line item array', () => {
-    const result = calculateRent([]);
-    expect(result).to.equal(0);
+  it('should return the correct rent for the given line items', async function () {
+    bookModelStub.find.resolves(books);
+    const expectedRent = (2 * RENTAL.FICTION) + (3 * RENTAL.NOVEL) + (4 * RENTAL.REGULAR);
+
+    const rent = await calculateRent(lineItems);
+    expect(rent).to.equal(expectedRent);
   });
 
-  it('should return 0 for line items with zero durations', () => {
-    const lineItems = [
-        { name: 'let us c', duration: 0 },
-        { name: 'head first javascript', duration: 0 },
-        { name: 'head first python', duration: 0 },
-    ];
-    const result = calculateRent(lineItems);
-    expect(result).to.equal(0);
+  it('should return "Some books not found" if some of the books are not in the database', async function () {
+    bookModelStub.find.resolves([]);
+    const expectedRent = "Some books not found"
+
+    const rent = await calculateRent(lineItems);
+    expect(rent).to.equal(expectedRent);
+  });
+
+  it('should return 0 for an empty line item array', async () => {
+    bookModelStub.find.resolves([]);
+    const expectedRent = 0;
+
+    const rent = await calculateRent([]);
+    expect(rent).to.equal(expectedRent);
+  });
+
+  it('should return 0 for line items with zero durations', async () => {
+    const lineItems2 = lineItems.map(li => ({ ...li, duration: 0 }));
+    bookModelStub.find.resolves(books);
+    const expectedRent = 0;
+
+    const rent = await calculateRent(lineItems2);
+    expect(rent).to.equal(expectedRent);
   });
 });

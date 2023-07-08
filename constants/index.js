@@ -4,6 +4,10 @@ const BOOK_TYPE = {
     REGULAR: 'regular',
 }
 
-const RENTAL = 1;
+const RENTAL = {
+    FICTION: 3,
+    NOVEL: 1.5,
+    REGULAR: 1.5,
+}
 
 module.exports = { BOOK_TYPE, RENTAL };

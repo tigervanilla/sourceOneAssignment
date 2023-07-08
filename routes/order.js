@@ -1,12 +1,13 @@
 const router = require('express').Router();
+const bookModel = require('../models/book.model');
 
 const { calculateRent } = require('../core/rentCalculator');
 
-router.get('/', (req,res) => res.send('done2'));
+router.get('/', (req, res) => res.send('done2'));
 
-router.post('/', (req,res) => {
+router.post('/', async (req, res) => {
     const { lineItems } = req.body;
-    const rent = calculateRent(lineItems);
+    const rent = await calculateRent(lineItems);
     return res.json({ rent });
 });
 
