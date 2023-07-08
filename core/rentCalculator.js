@@ -21,19 +21,33 @@ async function calculateRent(lineItems) {
 
     for (let book of booksFromDB) {
         const duration = bookDurationObj[book._id.toString()];
+        if (duration === 0) continue;
+
+        let minimumRent = 0;
+        let residualDuration = 0;
+        let perDayRental = 0;
+
         switch (book.type) {
             case BOOK_TYPE.FICTION:
-                rent += (duration * RENTAL.FICTION);
+                minimumRent = RENTAL.FICTION.MINIMUM_RENT;
+                residualDuration = Math.max(0, duration - RENTAL.FICTION.MINIMUM_DURATION);
+                perDayRental = RENTAL.FICTION.PER_DAY;
                 break;
             case BOOK_TYPE.NOVEL:
-                rent += (duration * RENTAL.NOVEL);
+                minimumRent = RENTAL.NOVEL.MINIMUM_RENT;
+                residualDuration = Math.max(0, duration - RENTAL.NOVEL.MINIMUM_DURATION);
+                perDayRental = RENTAL.NOVEL.PER_DAY;
                 break;
             case BOOK_TYPE.REGULAR:
-                rent += (duration * RENTAL.REGULAR);
+                minimumRent = RENTAL.REGULAR.MINIMUM_RENT;
+                residualDuration = Math.max(0, duration - RENTAL.REGULAR.MINIMUM_DURATION);
+                perDayRental = RENTAL.REGULAR.PER_DAY;
                 break;
         }
-    }
 
+        rent = rent + minimumRent + residualDuration * perDayRental;
+    }
+    
     return rent;
 }
 

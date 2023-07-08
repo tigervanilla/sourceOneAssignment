@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const { calculateRent } = require('../core/rentCalculator');
-const { RENTAL, BOOK_TYPE } = require('../constants/index')
+const { BOOK_TYPE } = require('../constants/index')
 const bookModel = require('../models/book.model');
 
 describe('calculateRent', () => {
@@ -26,7 +26,7 @@ describe('calculateRent', () => {
 
   it('should return the correct rent for the given line items', async function () {
     bookModelStub.find.resolves(books);
-    const expectedRent = (2 * RENTAL.FICTION) + (3 * RENTAL.NOVEL) + (4 * RENTAL.REGULAR);
+    const expectedRent = 6 + 4.5 + 5;
 
     const rent = await calculateRent(lineItems);
     expect(rent).to.equal(expectedRent);
@@ -56,4 +56,16 @@ describe('calculateRent', () => {
     const rent = await calculateRent(lineItems2);
     expect(rent).to.equal(expectedRent);
   });
+
+  it('should return the minimum rent for each book type if the duration is less than or equal to the minimum duration', async () => {
+    const lineItems2 = [
+      { _id: '64a5ad4212a9f6ccecbd46ca', duration: 0 },
+      { _id: '64a5ad4212a9f6ccecbd46cb', duration: 3 },
+      { _id: '64a5ad4212a9f6ccecbd46cc', duration: 2 }
+    ];
+    const expectedRent = 6.5;
+
+    const rent = await calculateRent(lineItems2);
+    expect(rent).to.equal(expectedRent);
+  })
 });
